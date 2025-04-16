@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "561632959730",
+    "project_id": "freespirit-74167",
+    "storage_bucket": "freespirit-74167.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561632959730:android:e103cad0054839aa6e846b",
+        "android_client_info": {
+          "package_name": "com.example.freespirit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVRz8gAU55C0FOdNy54w4rpyudYYY5fwo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
