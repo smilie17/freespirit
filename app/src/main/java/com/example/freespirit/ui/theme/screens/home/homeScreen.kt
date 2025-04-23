@@ -3,6 +3,7 @@ package com.example.freespirit.ui.theme.screens.home
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,13 +42,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.freespirit.R
+import com.example.freespirit.data.AuthViewModel
+import com.example.freespirit.navigation.ROUTE_ADD_STUDENT
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController){
+    var authViewModel: AuthViewModel = viewModel()
     val selectedItem = remember { mutableStateOf(0) }
     val context = LocalContext.current
     Scaffold (
@@ -132,7 +137,7 @@ fun HomeScreen(navController: NavController){
                             contentDescription = "Menu"
                         )
                     }
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {authViewModel.logout(navController, context)}) {
                         Icon(
                             imageVector = Icons.Filled.AccountBox,
                             contentDescription = "Logout"
@@ -164,7 +169,8 @@ fun HomeScreen(navController: NavController){
                     { Text(text = "Students", color = Color.Black) }
                 }
                 Card(
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier.padding(10.dp).clickable { navController.navigate(
+                        ROUTE_ADD_STUDENT) },
                     shape = RoundedCornerShape(20.dp),
                     elevation = CardDefaults.cardElevation(10.dp),
                     colors = CardDefaults.cardColors(Color.White)

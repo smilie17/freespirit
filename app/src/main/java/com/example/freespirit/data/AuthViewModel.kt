@@ -1,6 +1,7 @@
 package com.example.freespirit.data
 
 import android.content.Context
+import android.content.Intent
 import android.service.autofill.UserData
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import androidx.navigation.NavController
 import com.example.freespirit.models.UserModel
 import com.example.freespirit.navigation.ROUTE_HOME
 import com.example.freespirit.navigation.ROUTE_LOGIN
+import com.example.freespirit.ui.theme.screens.login.LoginScreen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -85,4 +87,12 @@ class AuthViewModel:ViewModel() {
                 }
             }
     }
+
+    fun logout(navController: NavController,context: Context){
+        mAuth.signOut()
+        Toast.makeText(context,"User successfully logged out",Toast.LENGTH_LONG).show()
+        navController.navigate(ROUTE_LOGIN)
+
+    }
+    
 }
