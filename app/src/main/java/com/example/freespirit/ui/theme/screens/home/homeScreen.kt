@@ -163,14 +163,14 @@ fun HomeScreen(navController: NavController){
                 {
                     Box(
                         modifier = Modifier.height(100.dp)
-                            .padding(25.dp),
+                            .padding(25.dp).clickable { navController.navigate(
+                            ROUTE_ADD_STUDENT) },
                         contentAlignment = Alignment.Center
                     )
                     { Text(text = "Students", color = Color.Black) }
                 }
                 Card(
-                    modifier = Modifier.padding(10.dp).clickable { navController.navigate(
-                        ROUTE_ADD_STUDENT) },
+                    modifier = Modifier.padding(10.dp),
                     shape = RoundedCornerShape(20.dp),
                     elevation = CardDefaults.cardElevation(10.dp),
                     colors = CardDefaults.cardColors(Color.White)

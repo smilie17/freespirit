@@ -99,7 +99,8 @@ fun LoginScreen (navController: NavController){
             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "Password Icon") }
         )
         Spacer(modifier = Modifier.height(20.dp))
-
+        Button(onClick = {authViewModel.login(email,password,navController,context)}, modifier = Modifier.wrapContentWidth().align(Alignment.CenterHorizontally), colors = ButtonDefaults.buttonColors(
+            Color.Cyan)) { Text(text = "Login", color = Color.Black) }
         Spacer(modifier = Modifier.height(20.dp))
         Text(
             buildAnnotatedString { append("Not yet registered? Register Here!!") },

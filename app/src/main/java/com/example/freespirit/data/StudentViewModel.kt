@@ -76,7 +76,7 @@ class StudentViewModel: ViewModel() {
 
                 val response = getImgurService().uploadImage(
                     body,
-                    "Client-ID fd3d33d40083c35"
+                    "Client-ID af6f338c6151426"
                 )
 
                 if (response.isSuccessful) {
