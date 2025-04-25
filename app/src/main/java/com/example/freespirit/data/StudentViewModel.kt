@@ -1,13 +1,22 @@
 package com.example.freespirit.data
 
+import android.app.AlertDialog
 import android.content.Context
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.freespirit.models.StudentModel
+import com.example.freespirit.navigation.ROUTE_VIEW_STUDENTS
+import com.example.freespirit.navigation.ROUTE_VIEW_STUDENTS
 import com.example.freespirit.network.ImgurService
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -59,7 +68,8 @@ class StudentViewModel: ViewModel() {
         name: String,
         gender: String,
         course: String,
-        desc: String
+        description: String,
+        navController: NavController
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -84,7 +94,7 @@ class StudentViewModel: ViewModel() {
 
                     val studentId = database.push().key ?: ""
                     val student = StudentModel(
-                        name, gender, course,desc, imageUrl, studentId
+                        name, gender, course,description, imageUrl, studentId
                     )
 
                     database.child(studentId).setValue(student)
@@ -92,6 +102,7 @@ class StudentViewModel: ViewModel() {
                             viewModelScope.launch {
                                 withContext(Dispatchers.Main) {
                                     Toast.makeText(context, "Student saved successfully", Toast.LENGTH_SHORT).show()
+                                                navController.navigate(ROUTE_VIEW_STUDENTS)
 
                                 }
                             }
@@ -116,4 +127,84 @@ class StudentViewModel: ViewModel() {
             }
         }
     }
+    fun updateStudent(context: Context, navController: NavController,
+                      name: String, gender: String,
+                      course: String, description: String, studentId: String){
+        val databaseReference = FirebaseDatabase.getInstance()
+            .getReference("Students/$studentId")
+        val updatedStudent = StudentModel(name, gender,
+            course, description,"",studentId)
+
+        databaseReference.setValue(updatedStudent)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful){
+
+                    Toast.makeText(context,"Student Updated Successfully", Toast.LENGTH_LONG).show()
+                    navController.navigate(ROUTE_VIEW_STUDENTS)
+                }else{
+
+                    Toast.makeText(context,"Student update failed", Toast.LENGTH_LONG).show()
+                }
+            }
+    }
+    fun deleteStudent(context: Context,studentId: String,
+                      navController: NavController){
+        AlertDialog.Builder(context)
+            .setTitle("Delete Student")
+            .setMessage("Are you sure you want to delete this student?")
+            .setPositiveButton("Yes"){ _, _ ->
+                val databaseReference = FirebaseDatabase.getInstance()
+                    .getReference("Students/$studentId")
+                databaseReference.removeValue().addOnCompleteListener {
+                        task ->
+                    if (task.isSuccessful){
+
+                        Toast.makeText(context,"Student deleted Successfully",Toast.LENGTH_LONG).show()
+                    }else{
+                        Toast.makeText(context,"Student not deleted",Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+            .setNegativeButton("No"){ dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+    fun viewStudents(
+        student: MutableState<StudentModel>,
+        students: SnapshotStateList<StudentModel>,
+        context: Context
+    ): SnapshotStateList<StudentModel> {
+        val ref = FirebaseDatabase.getInstance().getReference("Students")
+
+        ref.addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                students.clear()
+                for (snap in snapshot.children) {
+                    val value = snap.getValue(StudentModel::class.java)
+                    value?.let {
+                        students.add(it)
+                    }
+                }
+                if (students.isNotEmpty()) {
+                    student.value = students.first()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(context, "Failed to fetch students: ${error.message}", Toast.LENGTH_SHORT).show()
+
+            }
+        })
+
+        return students
+    }
+
+    fun update(context: Context, navController: NavController, name: String, gender: String, course: String, desc: String, studentId: String) {
+
+    }
+
 }
+
+
+

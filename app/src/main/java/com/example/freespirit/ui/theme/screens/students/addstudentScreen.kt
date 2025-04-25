@@ -47,6 +47,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.freespirit.R
 import com.example.freespirit.data.StudentViewModel
+import com.example.freespirit.navigation.ROUTE_UPDATE_STUDENT
 
 @Composable
 fun AddstudentScreen(navController: NavController){
@@ -122,9 +123,10 @@ fun AddstudentScreen(navController: NavController){
             Button(onClick = {}, modifier = Modifier, colors = ButtonDefaults.buttonColors(Color.Black)) { Text(text = "Dashboard") }
             Button(onClick = {
                 imageUri.value?.let {
-                    studentViewModel.uploadStudentWithImage(it,context,name,gender,course,description)
+                    studentViewModel.uploadStudentWithImage(it,context,name,gender,course,description,navController)
                 }?: Toast.makeText(context,"Please pick an image",Toast.LENGTH_LONG).show()
             }, modifier = Modifier, colors = ButtonDefaults.buttonColors(Color.Green)) { Text(text = "Save") }
+
         }
 
     }
